@@ -14,9 +14,9 @@ const index = require("./routes/index");
 const { MemoryStore } = require("express-session");
 
 
-const privateKey  = fs.readFileSync('certificate/talkbubble.org.key', 'utf8');
-const certificate = fs.readFileSync('certificate/talkbubble.org.crt', 'utf8');
-const credentials = { key: privateKey, cert: certificate };
+//const privateKey  = fs.readFileSync('certificate/talkbubble.org.key', 'utf8');
+//const certificate = fs.readFileSync('certificate/talkbubble.org.crt', 'utf8');
+//const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
 app.use(index);
@@ -32,7 +32,8 @@ app.use(session({
 }));
 
 const jsonParser = bodyParser.json();
-const server = https.createServer(credentials, app);
+const server = http.createServer(app);
+//const server = https.createServer(credentials, app);
 
 const io = socketIo(server, {
   cors: {
@@ -70,15 +71,20 @@ fetch('https://www.reddit.com/r/showerthoughts/hot/.json?limit=20')
 
         io.emit('change topic', topics[0]);
         topicIndex = 1;
-        setInterval(changeTopic, 20000);
+        setInterval(changeTopic, 200000);
       });
 
 
 function genId() {
   let idTemp;
-  if (nextId < 100000) idTemp = 1000000 + nextId;
-  else idTemp = nextId;
-  const id = '#' + idTemp.toString().slice(1);
+  let id;
+  if (nextId < 100000) {
+    idTemp = 1000000 + nextId;
+    id = '#' + idTemp.toString().slice(1);
+  }
+  else {
+    id = '#' + nextId.toString();
+  }
 
   nextId++;
   return id;

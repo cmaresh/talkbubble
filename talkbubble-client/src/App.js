@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import socketIOClient from "socket.io-client";
 import './App.css';
 
-const ENDPOINT = "https://www.talkbubble.org:4001";
-//const ENDPOINT = "http://127.0.0.1:4001";
+//const ENDPOINT = "https://www.talkbubble.org:4001";
+const ENDPOINT = "http://127.0.0.1:4001";
 
 const socket = socketIOClient(ENDPOINT, { secure: true });
 
@@ -100,7 +100,10 @@ class Topic extends React.Component {
   render() {
     return(
       <div className="topic">
-        <h5>Topic:</h5>
+        <h5 className="topic-header">
+          <span>Random Topic:</span>
+          <span>Taken from r/showerthoughts</span>
+        </h5>
         <div className={"topic-content "}>
           <div className={"topic-text " + (this.props.transitioningTopic ? 'transitioning' : '')}> {this.props.topic}</div>
         </div>
@@ -148,6 +151,9 @@ class Member extends React.Component {
       className={(this.props.activeMember === this.props.member ? 'active' : '')}
     >
       {this.props.member} {this.getNickname()}
+      <span className={(this.props.muted ? 'muted' : '')}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute-fill" viewBox="0 0 16 16">
+  <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>
+</svg></span>
     </h3>)
     ;
   }
@@ -169,6 +175,7 @@ class Room extends React.Component {
               nickname={member.nickname}
               manageMember={this.props.manageMember}
               activeMember={this.props.activeMember}
+              muted={this.props.muteList.includes(member.id)}
             />
           )
         }
@@ -187,6 +194,7 @@ class Management extends React.Component {
             members={this.props.members}
             manageMember={this.props.manageMember}
             activeMember={this.props.activeMember}
+            muteList={this.props.muteList}
           />
         </div>
         <div className="col-md-6">
@@ -234,6 +242,7 @@ class Form extends React.Component {
           <div className="posting-as">Posting as: 
             <input type="text" value={this.getAlias()} onChange={this.props.changeNickname} onClick={this.props.nicknameUpdate} />
           </div>
+          <div class="char-count">{this.props.msg.length}/256</div>
           <input type="submit" value="Post"></input>
         </div>
       </form>
@@ -302,11 +311,20 @@ class App extends React.Component {
   }
   
   handleChange(e) {
-    this.setState({ msg: e.target.value });
+    if (e.target.value.length <= 256) {
+      this.setState({ msg: e.target.value });
+    } else {
+      this.setState({ msg: e.target.value.substring(0, 256) })
+    }
   }
 
   changeNickname(e) {
-    this.setState({ nicknameTemp: e.target.value })
+    if (e.target.value.length <= 32) {
+      this.setState({ nicknameTemp: e.target.value })
+    } else {
+      this.setState({ nicknameTemp: e.target.value.substring(0, 32) })
+    }
+    
   }
 
   nicknameUpdate() {
@@ -457,13 +475,25 @@ class App extends React.Component {
       <div>
         <Nav />
         <div className="container backdrop">
-          <div className="row">
-            <div className="col-md-6 order-md-12">
+          <div className="row main">
+            <div className="col-md-6">
               <div className="column-content">
                 <Topic 
                   topic={this.state.topic}
                   transitioningTopic={this.state.transitioningTopic}
                 />
+                <Management 
+                  members={this.state.members}
+                  manageMember={this.manageMember}
+                  activeMember={this.state.activeMember}
+                  toggleMute={this.toggleMute}
+                  directMessage={this.directMessage}
+                  muteList={this.state.muteList}
+                />
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="column-content">
                 <Feed 
                   muteList={this.state.muteList}
                   posts={this.state.posts}
@@ -471,10 +501,6 @@ class App extends React.Component {
                   activeMember={this.state.activeMember}
                   setFeedRef={this.setFeedRef}
                 />
-              </div>
-            </div>
-            <div className="col-md-6 order-md-1">
-              <div className="column-content">
                 <Form 
                   msg={this.state.msg}
                   handleChange={this.handleChange}
@@ -486,13 +512,6 @@ class App extends React.Component {
                   nicknameAccept={this.nicknameAccept}
                   nicknameReject={this.nicknameReject}
                   updatingNickname={this.state.updatingNickname}
-                />
-                <Management 
-                  members={this.state.members}
-                  manageMember={this.manageMember}
-                  activeMember={this.state.activeMember}
-                  toggleMute={this.toggleMute}
-                  directMessage={this.directMessage}
                 />
               </div>
             </div>
