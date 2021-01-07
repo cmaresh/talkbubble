@@ -10,6 +10,9 @@ const socket = socketIOClient(ENDPOINT, { secure: true });
 
 window.nickname = '';
 
+window.shift = false;
+window.lastKey = '';
+
 class Nav extends React.Component {
   render() {
     return (
@@ -311,6 +314,7 @@ class App extends React.Component {
   }
   
   handleChange(e) {
+    if (window.lastKey === 'Enter' && !window.shift) return;
     if (e.target.value.length <= 256) {
       this.setState({ msg: e.target.value });
     } else {
@@ -348,6 +352,7 @@ class App extends React.Component {
     })
   }
   chat() {
+    if (this.state.msg.length < 1) return;
     socket.emit('chat', {
       msg: this.state.msg,
       member: window.memberId,
@@ -393,6 +398,28 @@ class App extends React.Component {
     montserrat.href = 'https://fonts.googleapis.com/css2?family=Montserrat&display=swap';
     document.head.appendChild(montserrat);
 
+
+    window.addEventListener('keydown', e => {
+      if (e.repeat) return;
+      if (e.key === "Shift") {
+        window.shift = true;
+      }
+      window.lastKey = e.key;
+      if (e.key === 'Enter' && !window.shift) {
+        if (this.state.updatingNickname) {
+          this.nicknameAccept();
+        } else {
+          this.chat();
+        }
+      }
+    });
+
+    window.addEventListener('keyup', e => {
+      if (e.key === "Shift") {
+        window.shift = false;
+      }
+    });
+    
     const appendMember = (data) => {
       data.active = false;
       const membersClone = [...this.state.members];
