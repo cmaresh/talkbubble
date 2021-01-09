@@ -8,6 +8,7 @@ import logo from './logo.svg';
 import React, { useState, useEffect } from 'react';
 import socketIOClient from "socket.io-client";
 import './App.css';
+import styled from 'styled-components';
 
 const ENDPOINT = "http://127.0.0.1:4001";
 
@@ -18,6 +19,31 @@ window.nickname = '';
 window.shift = false;
 window.lastKey = '';
 
+const ImageCC = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  color: var(--talkbubble-yellow);
+  font-size: 14px;
+  padding-left: 15px;
+  opacity: 0.5;
+  @media(max-width: 768px) {
+    margin-bottom: 120px; 
+    position: relative;
+    z-index: -1;
+    text-align: center;
+  }
+`
+
+const MainRow = styled.div`
+  background-color: var(--talkbubble-blue);
+  box-shadow: var(--talkbubble-shadow);
+  border-radius: 10px;
+  margin: 15px;
+  @media(max-width: 768px) {
+    margin: 5px;
+  }
+`
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -268,7 +294,7 @@ class App extends React.Component {
       <div>
         <Nav />
         <div className="container backdrop">
-          <div className="row main">
+          <MainRow className="row">
             <div className="col-md-12">
               <Topic 
                   topic={this.state.topic}
@@ -298,7 +324,7 @@ class App extends React.Component {
                 />
               </div>
             </div>
-            <div className="col-md-5 order-md-1">
+            <div className="col-md-5 order-md-1 mgmt-col">
               <div className="column-content">
                 <Management 
                   members={this.state.members}
@@ -311,13 +337,13 @@ class App extends React.Component {
               </div>
             </div>
             
-          </div>
+          </MainRow>
         </div>
-        <div className="image-CC">
+        <ImageCC className="image-CC">
           <a target="_blank" href="https://www.flickr.com/photos/35468147887@N01/14018311">“sea life”</a> by&nbsp;
           <a target="_blank" href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
           <a target="_blank" href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
-        </div>
+        </ImageCC>
         <script src="/socket.io/socket.io.js"></script>
       </div>
       );

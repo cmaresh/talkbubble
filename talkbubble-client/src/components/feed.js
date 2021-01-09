@@ -1,5 +1,13 @@
 import { Post } from './post';
+import styled from 'styled-components';
 
+const FeedElem = styled.div`
+  height: 100%;
+  flex: 1;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+`
 export function Feed(props) {
     const final = [];
     for (let i = 0; i < props.posts.length; i++) {
@@ -20,8 +28,8 @@ export function Feed(props) {
       }
     }
     return (
-      <div className="feed" ref={props.setFeedRef}>
+      <FeedElem className="no-scroll" ref={props.setFeedRef}>
         {final}
-      </div>
+      </FeedElem>
     );
 }

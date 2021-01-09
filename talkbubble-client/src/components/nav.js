@@ -1,6 +1,14 @@
+import styled from 'styled-components';
+
+const NavElem = styled.div`
+  padding-top: 5px;
+  background-color: var(--talkbubble-blue);
+  border-bottom: 1px solid var(--talkbubble-yellow);
+`
+
 export function Nav(props) {
     return (
-    <div className="nav">
+    <NavElem>
       <div className="container">
         <div className="row">
           <div className="col-sm-12 d-flex justify-content-center">
@@ -12,6 +20,6 @@ export function Nav(props) {
           </div>
         </div>
       </div>
-    </div>
+    </NavElem>
     );
   }

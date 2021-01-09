@@ -40,347 +40,24 @@ a:hover {
   color: var(--talkbubble-orange) !important;
 }
 
-.nav {
-  padding-top: 5px;
-  background-color: var(--talkbubble-blue);
-  border-bottom: 1px solid var(--talkbubble-yellow);
-}
-
-.image-CC {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  color: var(--talkbubble-yellow);
-  font-size: 14px;
-  padding-left: 15px;
-  opacity: 0.5;
-}
-
-
-.row.main {
-  background-color: var(--talkbubble-blue);
-  box-shadow: var(--talkbubble-shadow);
-  border-radius: 10px;
-  margin: 15px;
-}
-
 .col-md-6 {
   padding: 25px;
 }
 
-textarea {
-  display: block;
-  width: 100%;
-  border-radius: 10px;
-  border: none;
-  height: 45px;
-}
-
-textarea::placeholder {
-  color: gray;
-  opacity: 1;
-  font-size: 16px;
-  color: var(--talkbubble-blue);
-}
-
-input[type=submit] {
-  background-color: var(--talkbubble-yellow);
-  border-radius: 10px;
-  border: none;
-  width: 72px;
-  height: 36px;
-  padding: 5px;
-  color: var(--talkbubble-blue);
-  text-transform: uppercase;
-  font-size: 16px;
-  transition: 0.1s all linear;
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-input[type=submit]:hover {
-  background-color: var(--talkbubble-green);
-  color: var(--talkbubble-yellow);
-}
-
 .column-content {
   position: relative;
-  height: 70vh;
+  height: 64vh;
   padding: 0 12px 16px 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.room, .options, .topic {
-  position: relative;
-  z-index: 1;
-}
-.room {
-  border-radius: 10px 10px 0 0;
-  height: 100%;
-  position: relative;
-}
-
-.room .header {
-  background-color: var(--talkbubble-blue);
-  font-size: 16px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--talkbubble-yellow);
-  text-transform: uppercase;
-  letter-spacing: 0.11em;
-}
-
-.room-shader {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  box-shadow: inset var(--talkbubble-shadow);
-  pointer-events: none;
-  border-radius: 10px;
-}
-
-.bi-volume-mute-fill { 
-  display: none; 
-}
-
-.muted .bi-volume-mute-fill { 
-  display: inline-block; 
-}
-
-.char-count { 
-  color: var(--talkbubble-yellow); 
-}
-
-.room h3 {    
-  font-weight: bold;
-  padding: 12px 25px;
-  margin-bottom: 0;
-  color: var(--talkbubble-yellow);
-  font-size: 14px;
-  line-height: 20px;
-  cursor: pointer;
-  border-bottom: 1px solid var(--talkbubble-orange);
-  background-color: var(--talkbubble-blue);
-  transition: 0.2s background-color linear, 0.2s color linear, 0.4s padding-left ease-out;
-}
-
-.room h3:hover {
-  color: var(--talkbubble-blue);
-  background-color: var(--talkbubble-yellow);
-}
-
-.room h3.active {
-  color: var(--talkbubble-blue);
-  background-color: var(--talkbubble-yellow);
-}
-
-.room .member-list {
-  height: 100%;
-  overflow-y: scroll;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.room .member-list {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.room .member-list::-webkit-scrollbar {
-  display: none;
-}
-
-.post {
-  color: var(--talkbubble-orange);
-  font-size: 16px;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 10px;
-  transition: 0.2s all linear;
-  display: flex;
-}
-
-.post.inactive {
-  opacity: 0.3;
-}
-
-.post.sending {
-  background-color: var(--talkbubble-green);
-  color: var(--talkbubble-yellow);
-}
-
-.post.receiving {
-  background-color: var(--talkbubble-orange);
-  color: var(--talkbubble-blue);
-}
-
-.post .to-from {
-  font-weight: bold;
-}
-
-.post .msg {
-  word-wrap: break-word;
-  overflow-x: hidden;
-}
-.below-textarea {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 10px;
-}
-
 .flex-one {
   flex: 1;
 }
 
-.below-textarea .nickname-option {
-  border-radius: 5px;
-  color: var(--talkbubble-orange);
-  transition: all 0.2s linear, width 0.1s linear;
-  cursor: pointer;
-  opacity: 0;
-  width: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
-}
-
-.below-textarea .nickname-option.active {
-  opacity: 1;
-  width: 36px;
-  margin-right: 5px;
-}
-
-.below-textarea .nickname-option:hover {
-  color: var(--talkbubble-yellow);
-}
-
-.below-textarea .nickname-option.accept {
-  background-color: var(--talkbubble-green);
-}
-
-.below-textarea .nickname-option.reject {
-  background-color: #4E1717;
-}
-
-.posting-as {
-  color: var(--talkbubble-yellow);
-  font-size: 14px;
-  flex: 1;
-}
-
-.posting-as input[type=text] {
-  background-color: var(--talkbubble-blue);
-  border: 0;
-  outline: 0;
-  padding-left: 5px;
-  color: var(--talkbubble-yellow);
-  width: 140px;
-}
-.options {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 40px;
-}
-
-.option {
-  margin-top: 15px;
-  opacity: 0;
-  color: var(--talkbubble-orange);
-  position: relative;
-  left: -20px;
-  transition: all 0.4s ease-out;
-  cursor: pointer;
-}
-
-.option:hover {
-  color: var(--talkbubble-yellow);
-}
-
-.option.active {
-  opacity: 1;
-  left: 0;
-}
-
-.post-member {
-  font-size: 12px;
-  font-weight: bold;
-}
-
-textarea {
-  padding: 10px 15px;
-  resize: none;
-}
-textarea:focus {
-  outline: none;
-}
-
-.topic {
-  color: var(--talkbubble-yellow);
-  margin-top: 15px;
-}
-
-.topic h5 {
-  padding: 0 15px;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 0.3;
-  display: flex;
-  justify-content: space-between;
-}
-
-.topic .topic-content {
-  border-radius: 0;
-  padding: 25px;
-  position: relative;
-  box-shadow: var(--talkbubble-shadow) inset;
-  height: 15vh;
-  margin: 15px;
-  border: 0;
-  background-color: var(--talkbubble-yellow);
-  color: var(--talkbubble-blue);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow-y: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-.topic .topic-content::-webkit-scrollbar {
-  display: none;
-}
-
-.topic .topic-text {
-  position: relative;
-  text-align: center;
-  transition: all 0.4s linear;
-  left: 0;
-}
-
-.topic .topic-text.transitioning {
-  opacity: 0;
-  left: -15px;
-}
-
-.feed {
-  height: 100%;
-  flex: 1;
-  overflow-y: scroll;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.feed::-webkit-scrollbar {
+.no-scroll::-webkit-scrollbar {
   display: none;
 }
 
@@ -394,69 +71,7 @@ textarea:focus {
 
   .column-content {
     padding: 0;
-  }
-
-  #postform {
-    position: fixed;
-    z-index: 2;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 0;
-    width: 100vw;
-    padding: 15px;
-    background-color: var(--talkbubble-blue);
-  }
-  .row.main {
-    margin: 5px;
-  }
-  textarea {
-    height: 40px;
-    font-size: 12px;
-  }
-  .post {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .options {
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 0;
-  }
-  
-  textarea::placeholder {
-    text-align: left;
-    font-size: 16px;
-    line-height: 100%;
-  }
-
-  .topic {
-    padding: 0;
-  }
-
-  .topic h5 {
-    padding: 0;
-  }
-
-  .topic .topic-content {
-    margin: 15px 0;
-  }
-  .image-CC {
-    margin-bottom: 120px; 
-    position: relative;
-    z-index: -1;
-    text-align: center;
-  }
-
-  .topic .topic-content {
-    border-radius: 0;
-    padding: 25px;
-    position: relative;
-    box-shadow: var(--talkbubble-shadow) inset;
-    height: 25vh;
-    border: 0;
-    background-color: var(--talkbubble-yellow);
-    color: var(--talkbubble-blue);
+    height: 45vh;
   }
 
   h1 {
@@ -464,6 +79,10 @@ textarea:focus {
     font-size: 1.5rem !important;
     margin-bottom: 0 !important;
     padding: 15px 0;
+  }
+
+  .mgmt-col {
+    display: none;
   }
 }
 
