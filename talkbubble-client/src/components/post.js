@@ -10,6 +10,7 @@ const PostElem = styled.div`
   border-radius: 10px;
   transition: 0.2s all linear;
   display: flex;
+  cursor: pointer;
   &.inactive {
     opacity: 0.3;
   }
@@ -37,7 +38,12 @@ export class Post extends React.Component {
     this.directText = this.directText.bind(this);
     this.msgClass = this.msgClass.bind(this);
     this.getNickname = this.getNickname.bind(this);
+    this.selectMember = this.selectMember.bind(this);
   }
+  
+    selectMember() {
+      this.props.manageMember(this.props.post.member);
+    }
 
     directText() {
       if (!this.props.post.recipient) return '';
@@ -58,7 +64,7 @@ export class Post extends React.Component {
     }
     render() {
       return(
-        <PostElem className={"post " + 
+        <PostElem onClick={this.selectMember} className={"post " + 
           (this.props.activeMember && this.props.post.member !== this.props.activeMember ? 'inactive ' : ' ') +
           (this.msgClass())
         }>

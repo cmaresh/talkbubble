@@ -28,6 +28,7 @@ const ImageCC = styled.div`
   padding-left: 15px;
   opacity: 0.5;
   @media(max-width: 768px) {
+    display: none;
     margin-bottom: 120px; 
     position: relative;
     z-index: -1;
@@ -58,6 +59,7 @@ class App extends React.Component {
       topic: '',
       transitioningTopic: false,
       updatingNickname: false,
+      location: 'feed',
     }
 
     this.manageMember     = this.manageMember.bind(this);
@@ -70,10 +72,15 @@ class App extends React.Component {
     this.nicknameAccept   = this.nicknameAccept.bind(this);
     this.nicknameUpdate   = this.nicknameUpdate.bind(this);
     this.setFeedRef       = this.setFeedRef.bind(this);
+    this.setLocation      = this.setLocation.bind(this);
   }
 
   setFeedRef(ref) {
     this.feedRef = ref;
+  }
+
+  setLocation(loc) {
+    this.setState({ location: loc });
   }
 
   manageMember(member) {
@@ -155,7 +162,7 @@ class App extends React.Component {
   directMessage() {
     let msg = this.state.msg;
     msg = this.state.activeMember + ' ' + msg;
-    this.setState({ msg })
+    this.setState({ msg, location: 'feed' })
   }
 
   componentDidMount() {
@@ -292,7 +299,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Nav />
+        <Nav location={this.state.location} setLocation={this.setLocation} />
         <div className="container backdrop">
           <MainRow className="row">
             <div className="col-md-12">
@@ -301,7 +308,7 @@ class App extends React.Component {
                   transitioningTopic={this.state.transitioningTopic}
                 />
             </div>
-            <div className="col-md-7 order-md-2">
+            <div className={"col-md-7 order-md-2 feed-col " + (this.state.location === 'feed' ? 'active' : '')}>
               <div className="column-content">
                 <Feed 
                   muteList={this.state.muteList}
@@ -309,6 +316,7 @@ class App extends React.Component {
                   members={this.state.members}
                   activeMember={this.state.activeMember}
                   setFeedRef={this.setFeedRef}
+                  manageMember={this.manageMember}
                 />
                 <Form 
                   msg={this.state.msg}
@@ -324,7 +332,7 @@ class App extends React.Component {
                 />
               </div>
             </div>
-            <div className="col-md-5 order-md-1 mgmt-col">
+            <div className={"col-md-5 order-md-1 mgmt-col " + (this.state.location === 'mgmt' ? 'active' : '')}>
               <div className="column-content">
                 <Management 
                   members={this.state.members}

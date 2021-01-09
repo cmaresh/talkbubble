@@ -24,6 +24,7 @@ export function Feed(props) {
           key={i} 
           post={post}
           member={member}
+          manageMember={props.manageMember}
         />)
       }
     }

@@ -2,16 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const FormElem = styled.form`
-  @media(max-width: 768px) {
-    position: fixed;
-    z-index: 2;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 0;
-    width: 100vw;
-    padding: 15px;
-    background-color: var(--talkbubble-blue);
-  }
+  
 `
 
 const FormInput = styled.textarea`
