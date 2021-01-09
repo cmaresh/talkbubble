@@ -5,6 +5,7 @@
 /talkbubble-client/node_modules
 /talkbubble-server/node_modules
 /talkbubble-server/certificate
+/talkbubble-server/env
 /.pnp
 .pnp.js
 

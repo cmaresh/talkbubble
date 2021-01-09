@@ -13,11 +13,18 @@ const port = process.env.PORT || 4001;
 const index = require("./routes/index");
 const filter = require("profanity-filter");
 const { MemoryStore } = require("express-session");
+const dotenv = require("dotenv");
 
+dotenv.config({ path: './env/process.env' });
 
-//const privateKey  = fs.readFileSync('certificate/talkbubble.org.key', 'utf8');
-//const certificate = fs.readFileSync('certificate/talkbubble.org.crt', 'utf8');
-//const credentials = { key: privateKey, cert: certificate };
+let privateKey;
+let certificate;
+let credentials;
+if (process.env.ENV === 'PROD') {
+  privateKey  = fs.readFileSync(process.env.KEY_PATH, 'utf8');
+  certificate = fs.readFileSync(process.env.CERT_PATH, 'utf8');
+  credentials = { key: privateKey, cert: certificate };
+}
 
 filter.seed('profanity');
 const app = express();
@@ -34,18 +41,28 @@ app.use(session({
 }));
 
 const jsonParser = bodyParser.json();
-const server = http.createServer(app);
-//const server = https.createServer(credentials, app);
+let server;
+if (process.env.ENV === 'PROD') {
+  server = https.createServer(credentials, app);
+} else {
+  server = http.createServer(app);
+}
+
+let origin;
+if (process.env.env === 'PROD') {
+  origin = [
+      'http://talkbubble.org',
+      'https://talkbubble.org',
+      'http://www.talkbubble.org',
+      'https://www.talkbubble.org'
+    ];
+} else {
+  origin = '*';
+}
 
 const io = socketIo(server, {
   cors: {
-    // origin: [
-    //   'http://talkbubble.org',
-    //   'https://talkbubble.org',
-    //   'http://www.talkbubble.org',
-    //   'https://www.talkbubble.org'
-    // ],
-    origin: '*',
+    origin,
     methods: ['GET', 'POST']
   }
 });
@@ -62,7 +79,7 @@ const changeTopic = function() {
   io.emit('change topic', topics[topicIndex]);
 }
 
-fetch('https://www.reddit.com/r/showerthoughts/hot/.json?limit=20')
+fetch(process.env.REDDIT_API)
       .then( (response) => response.json() )
       .then( (data) => { 
         const posts = data.data.children;
@@ -92,9 +109,7 @@ function genId() {
   return id;
 }
 
-io.on("connection", (socket) => {
-  console.log("New client connected");
-  
+io.on("connection", (socket) => {  
   socket.on('join', function(callback) {
     const memberId = genId();
     socket.memberId = memberId;
@@ -151,7 +166,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
     let memberTemp;
     for (let i = 0; i < members.length; i++) {
       if (members[i].id === socket.id) {
@@ -164,10 +178,6 @@ io.on("connection", (socket) => {
       io.emit('member left', memberTemp.memberId);
     }
   });
-});
-
-app.post('/api/chat', jsonParser, function(req, res) {
-  io.emit('chat', req.body);
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));

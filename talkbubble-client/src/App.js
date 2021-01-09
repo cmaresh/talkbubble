@@ -4,7 +4,6 @@ import socketIOClient from "socket.io-client";
 import './App.css';
 import popfile from './media/pop.wav';
 
-//const ENDPOINT = "https://www.talkbubble.org:4001";
 const ENDPOINT = "http://127.0.0.1:4001";
 
 const socket = socketIOClient(ENDPOINT, { secure: true });
