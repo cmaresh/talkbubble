@@ -10,7 +10,8 @@ import socketIOClient from "socket.io-client";
 import './App.css';
 import styled from 'styled-components';
 
-const ENDPOINT = "http://127.0.0.1:4001";
+const ENDPOINT = "https://www.talkbubble.org:4001";
+//const ENDPOINT = "http://127.0.0.1:4001";
 
 const socket = socketIOClient(ENDPOINT, { secure: true });
 
@@ -243,7 +244,7 @@ class App extends React.Component {
 
     const appendChat = (data) => {
       let lockScroll = false;
-      if (this.feedRef) lockScroll = this.feedRef.scrollHeight - this.feedRef.scrollTop === this.feedRef.clientHeight;
+      if (this.feedRef) lockScroll = Math.abs(this.feedRef.scrollHeight - this.feedRef.scrollTop - this.feedRef.clientHeight) < 100;
       const postsClone = [...this.state.posts];
       postsClone.push(data);
       this.setState({

@@ -44,10 +44,11 @@ const TopicContent = styled.div`
     padding: 25px;
     position: relative;
     box-shadow: var(--talkbubble-shadow) inset;
-    height: 25vh;
+    height: 20vh;
     border: 0;
     background-color: var(--talkbubble-yellow);
     color: var(--talkbubble-blue);
+    margin: 15px 0;
   }
 `
 
