@@ -16,6 +16,7 @@ const socket = socketIOClient(ENDPOINT, { secure: true });
 
 window.nickname = '';
 
+// shift and lastkey variables used for tracking shift+enter command in chat input
 window.shift = false;
 window.lastKey = '';
 
@@ -49,7 +50,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeMember: '',
+      activeMember: '', 
+      location: 'feed',
       members: [],
       msg: '',
       muteList: [],
@@ -59,7 +61,6 @@ class App extends React.Component {
       topic: '',
       transitioningTopic: false,
       updatingNickname: false,
-      location: 'feed',
     }
 
     this.manageMember     = this.manageMember.bind(this);
