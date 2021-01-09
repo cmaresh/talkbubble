@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import React, { useState, useEffect } from 'react';
 import socketIOClient from "socket.io-client";
 import './App.css';
+import popfile from './media/pop.wav';
 
 //const ENDPOINT = "https://www.talkbubble.org:4001";
 const ENDPOINT = "http://127.0.0.1:4001";
@@ -95,33 +96,41 @@ function Feed(props) {
     );
 }
 
-function Topic(props) {
-  return(
-    <div className="topic">
-      <h5 className="topic-header">
-        <span>Random Topic:</span>
-        <span>Taken from r/showerthoughts</span>
-      </h5>
-      <div className={"topic-content "}>
-        <div className={"topic-text " + (props.transitioningTopic ? 'transitioning' : '')}> {props.topic}</div>
+class Topic extends React.Component {
+  render() {
+    return(
+      <div className="topic">
+        <h5 className="topic-header">
+          <span>Random Topic:</span>
+          <span>Taken from <a target="_blank" href="https://www.reddit.com/r/Showerthoughts/">r/showerthoughts</a></span>
+        </h5>
+        <div className={"topic-content "}>
+          <div className={"topic-text " + (this.props.transitioningTopic ? 'transitioning' : '')}> {this.props.topic}</div>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
-function Options(props) {
-  return (
-    <div className="options">
-      <div 
-        className={"option mute " + (props.activeMember ? 'active' : '')} 
-        onClick={props.toggleMute}
-      >Mute This User</div>
-      <div 
-        className={"option dm " + (props.activeMember ? 'active' : '')} 
-        onClick={props.directMessage}
-      >Message This User</div>
-    </div>
-  );
+class Options extends React.Component {
+  render() {
+    return (
+      <div className="options">
+        <div 
+          className={"option mute " + (this.props.activeMember ? 'active' : '')} 
+          onClick={this.props.toggleMute}
+        ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute" viewBox="0 0 16 16">
+        <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zM6 5.04L4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96V5.04zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>
+      </svg></div>
+        <div 
+          className={"option dm " + (this.props.activeMember ? 'active' : '')} 
+          onClick={this.props.directMessage}
+        ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383l-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+      </svg></div>
+      </div>
+    );
+  }
 }
 
 class Member extends React.Component {
@@ -157,6 +166,7 @@ class Member extends React.Component {
 function Room(props) {
     return (
       <div className="room">
+        <div className="room-shader"></div>
         <div className="header">
           Active Users
         </div>
@@ -178,26 +188,28 @@ function Room(props) {
     );
 }
 
-function Management(props) {
-  return (
-    <div className="row flex-one">
-      <div className="col-md-6">
-        <Room 
-          members={props.members}
-          manageMember={props.manageMember}
-          activeMember={props.activeMember}
-          muteList={props.muteList}
-        />
+class Management extends React.Component {
+  render() {
+    return (
+      <div className="row flex-one">
+        <div className="col-md-10">
+          <Room 
+            members={this.props.members}
+            manageMember={this.props.manageMember}
+            activeMember={this.props.activeMember}
+            muteList={this.props.muteList}
+          />
+        </div>
+        <div className="col-md-2">
+          <Options 
+            activeMember={this.props.activeMember}
+            toggleMute={this.props.toggleMute}
+            directMessage={this.props.directMessage}
+          />
+        </div>
       </div>
-      <div className="col-md-6">
-        <Options 
-          activeMember={props.activeMember}
-          toggleMute={props.toggleMute}
-          directMessage={props.directMessage}
-        />
-      </div>
-    </div>
   );
+  }
 }
 
 class Form extends React.Component {
@@ -357,6 +369,7 @@ class App extends React.Component {
 
   componentDidMount() {
     const _state = this.state;
+    const pop = new Audio(popfile);
 
     socket.emit('join', (member, members) => {
       window.memberId = member;
@@ -438,6 +451,7 @@ class App extends React.Component {
         posts: postsClone,
       });
       if (this.feedRef && lockScroll) this.feedRef.scrollTop = this.feedRef.scrollHeight;
+      pop.play();
     }
 
     const _this = this;
@@ -490,23 +504,13 @@ class App extends React.Component {
         <Nav />
         <div className="container backdrop">
           <div className="row main">
-            <div className="col-md-6">
-              <div className="column-content">
-                <Topic 
+            <div className="col-md-12">
+              <Topic 
                   topic={this.state.topic}
                   transitioningTopic={this.state.transitioningTopic}
                 />
-                <Management 
-                  members={this.state.members}
-                  manageMember={this.manageMember}
-                  activeMember={this.state.activeMember}
-                  toggleMute={this.toggleMute}
-                  directMessage={this.directMessage}
-                  muteList={this.state.muteList}
-                />
-              </div>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-7 order-md-2">
               <div className="column-content">
                 <Feed 
                   muteList={this.state.muteList}
@@ -529,12 +533,25 @@ class App extends React.Component {
                 />
               </div>
             </div>
+            <div className="col-md-5 order-md-1">
+              <div className="column-content">
+                <Management 
+                  members={this.state.members}
+                  manageMember={this.manageMember}
+                  activeMember={this.state.activeMember}
+                  toggleMute={this.toggleMute}
+                  directMessage={this.directMessage}
+                  muteList={this.state.muteList}
+                />
+              </div>
+            </div>
+            
           </div>
         </div>
         <div className="image-CC">
-          <a href="https://www.flickr.com/photos/35468147887@N01/14018311">“sea life”</a> by&nbsp;
-          <a href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
-          <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
+          <a target="_blank" href="https://www.flickr.com/photos/35468147887@N01/14018311">“sea life”</a> by&nbsp;
+          <a target="_blank" href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
+          <a target="_blank" href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
         </div>
         <script src="/socket.io/socket.io.js"></script>
       </div>

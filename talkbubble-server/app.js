@@ -11,6 +11,7 @@ const fetch = require('node-fetch');
 const sanitizer = require('sanitizer');
 const port = process.env.PORT || 4001;
 const index = require("./routes/index");
+const filter = require("profanity-filter");
 const { MemoryStore } = require("express-session");
 
 
@@ -18,6 +19,7 @@ const { MemoryStore } = require("express-session");
 //const certificate = fs.readFileSync('certificate/talkbubble.org.crt', 'utf8');
 //const credentials = { key: privateKey, cert: certificate };
 
+filter.seed('profanity');
 const app = express();
 app.use(index);
 app.use(cors());
@@ -117,9 +119,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on('chat', (data) => {
+    if (data.msg.length > 256) return;
     if (data.msg[0] === '#') {
       const recipientId = data.msg.match(/#[0-9]*(?=\s)/m)[0];
       data.msg = data.msg.replace(recipientId, '').trim();
+      data.msg = filter.clean(data.msg);
       let recipient;
       for (let i = 0; i < members.length; i++) {
         if (members[i].memberId === recipientId) {
@@ -132,11 +136,13 @@ io.on("connection", (socket) => {
       io.to(recipient.id).emit('chat', data);
       io.to(socket.id).emit('chat', data);
     } else {
+      data.msg = filter.clean(data.msg);
       io.emit('chat', data);
     }
   });
 
   socket.on('change nickname', (data) => {
+    if (data.nickname.length > 32) return;
     socket.nickname = data.nickname;
     io.emit('change nickname', {
       memberId: socket.memberId,
