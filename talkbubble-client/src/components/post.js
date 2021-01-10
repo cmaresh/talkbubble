@@ -32,51 +32,43 @@ const Message = styled.div`
   word-wrap: break-word;
   overflow-x: hidden;
 `
-export class Post extends React.Component {
-  constructor(props){
-    super(props);
-    this.directText = this.directText.bind(this);
-    this.msgClass = this.msgClass.bind(this);
-    this.getNickname = this.getNickname.bind(this);
-    this.selectMember = this.selectMember.bind(this);
-  }
-  
-    selectMember() {
-      this.props.manageMember(this.props.post.member);
-    }
 
-    directText() {
-      if (!this.props.post.recipient) return '';
-      else if (this.props.post.recipient === window.memberId) return '@ You';
-      else return '@ ' + this.props.post.recipient;
-    }
-  
-    msgClass() {
-      if (!this.props.post.recipient) return '';
-      else if (this.props.post.recipient === window.memberId) return 'receiving';
-      else return 'sending';
-    }
-  
-    getNickname() {
-      if (!this.props.member) return '';
-      else if (this.props.member.nickname) return '(' + this.props.member.nickname + ')';
-      else return '';
-    }
-    render() {
+function selectMember(props) {
+  props.manageMember(props.post.member);
+}
+
+function directText(props) {
+  if (!props.post.recipient) return '';
+  else if (props.post.recipient === window.memberId) return '@ You';
+  else return '@ ' + props.post.recipient;
+}
+
+function msgClass(props) {
+  if (!props.post.recipient) return '';
+  else if (props.post.recipient === window.memberId) return 'receiving';
+  else return 'sending';
+}
+
+function getNickname(props) {
+  if (!props.member) return '';
+  else if (props.member.nickname) return '(' + props.member.nickname + ')';
+  else return '';
+}
+
+export function Post(props) {
       return(
-        <PostElem onClick={this.selectMember} className={"post " + 
-          (this.props.activeMember && this.props.post.member !== this.props.activeMember ? 'inactive ' : ' ') +
-          (this.msgClass())
+        <PostElem onClick={() => selectMember(props)} className={"post " + 
+          (props.activeMember && props.post.member !== props.activeMember ? 'inactive ' : ' ') +
+          (msgClass(props))
         }>
           <Message className="msg">
             <b>
-            {this.props.post.member}
-            {this.getNickname()}&nbsp;
-            {this.directText()}<br></br>
+            {props.post.member}
+            {getNickname(props)}&nbsp;
+            {directText(props)}<br></br>
             </b>
-            {this.props.post.msg}
+            {props.post.msg}
           </Message>
         </PostElem>
       );
-    }
   }
