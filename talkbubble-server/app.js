@@ -10,7 +10,6 @@ const session = require('express-session');
 const fetch = require('node-fetch');
 const sanitizer = require('sanitizer');
 const port = process.env.PORT || 4001;
-const index = require("./routes/index");
 const filter = require("profanity-filter");
 const { MemoryStore } = require("express-session");
 const dotenv = require("dotenv");
@@ -28,7 +27,6 @@ if (process.env.ENV === 'PROD') {
 
 filter.seed('profanity');
 const app = express();
-app.use(index);
 app.use(cors());
 app.use(cookieParser());
 app.use(session({

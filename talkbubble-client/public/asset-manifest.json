@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.fe0f5d58.chunk.css",
+    "main.js": "/static/js/main.ae64bf50.chunk.js",
+    "main.js.map": "/static/js/main.ae64bf50.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.2d1db214.js",
+    "runtime-main.js.map": "/static/js/runtime-main.2d1db214.js.map",
+    "static/js/2.be97ce27.chunk.js": "/static/js/2.be97ce27.chunk.js",
+    "static/js/2.be97ce27.chunk.js.map": "/static/js/2.be97ce27.chunk.js.map",
+    "static/js/3.126d55c9.chunk.js": "/static/js/3.126d55c9.chunk.js",
+    "static/js/3.126d55c9.chunk.js.map": "/static/js/3.126d55c9.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.fe0f5d58.chunk.css.map": "/static/css/main.fe0f5d58.chunk.css.map",
+    "static/js/2.be97ce27.chunk.js.LICENSE.txt": "/static/js/2.be97ce27.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/static/media/logo.6ce24c58.svg",
+    "static/media/pop.fe2dd7e0.wav": "/static/media/pop.fe2dd7e0.wav",
+    "static/media/index.css": "/static/media/sealife.e379c7cc.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2d1db214.js",
+    "static/js/2.be97ce27.chunk.js",
+    "static/css/main.fe0f5d58.chunk.css",
+    "static/js/main.ae64bf50.chunk.js"
+  ]
+}
