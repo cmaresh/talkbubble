@@ -6,6 +6,8 @@
 /talkbubble-server/node_modules
 /talkbubble-server/certificate
 /talkbubble-server/env
+.eslintcache
+/talkbubble-client/.eslintcache
 /.pnp
 .pnp.js
 
