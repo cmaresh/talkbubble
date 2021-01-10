@@ -130,10 +130,12 @@ io.on("connection", (socket) => {
           break;
         }
       }
-      data.direct = true;
-      data.recipient = recipientId;
-      io.to(recipient.id).emit('chat', data);
-      io.to(socket.id).emit('chat', data);
+      if (recipient) {
+        data.direct = true;
+        data.recipient = recipientId;
+        io.to(recipient.id).emit('chat', data);
+        io.to(socket.id).emit('chat', data);
+      }
     } else {
       data.msg = filter.clean(data.msg);
       io.emit('chat', data);
