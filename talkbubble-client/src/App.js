@@ -181,20 +181,7 @@ class App extends React.Component {
       });
     });
 
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-    document.head.appendChild(link);
-
-    const gfonts = document.createElement('link');
-    gfonts.rel = 'preconnect';
-    gfonts.href = 'https://fonts.gstatic.com';
-    document.head.appendChild(gfonts);
-
-    const montserrat = document.createElement('link');
-    montserrat.rel = 'stylesheet';
-    montserrat.href = 'https://fonts.googleapis.com/css2?family=Montserrat&display=swap';
-    document.head.appendChild(montserrat);
+  
 
 
     
@@ -351,7 +338,6 @@ class App extends React.Component {
           <a target="_blank" href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
           <a target="_blank" href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
         </ImageCC>
-        <script src="/socket.io/socket.io.js"></script>
       </div>
       );
   }
