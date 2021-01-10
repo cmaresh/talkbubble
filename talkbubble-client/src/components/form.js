@@ -1,10 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const FormElem = styled.form`
-  
-`
-
 const FormInput = styled.textarea`
   display: block;
   width: 100%;
@@ -129,7 +125,7 @@ export class Form extends React.Component {
   
     render() {
       return (
-        <FormElem id="postform" action="javascript:void(0)" onSubmit={this.props.onSubmit}>
+        <form id="postform" action="javascript:void(0)" onSubmit={this.props.onSubmit}>
           <FormInput id="postform-textarea" form="postform" value={this.props.msg} onChange={this.props.handleChange} name="content" placeholder="Chat">{this.props.msg}</FormInput>
           <FormOpt className="below-textarea">
             <NicknameOpt className={"nickname-option accept " + (this.props.updatingNickname ? 'active' : '')} onClick={this.props.nicknameAccept}>
@@ -144,7 +140,7 @@ export class Form extends React.Component {
             <CharCount>{this.props.msg.length}/256</CharCount>
             <Submit type="submit" value="Post"></Submit>
           </FormOpt>
-        </FormElem>
+        </form>
       );
     }
   }

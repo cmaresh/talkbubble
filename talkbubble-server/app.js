@@ -1,17 +1,12 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const fs = require('fs');
 const http = require("http");
 const https = require("https");
 const cors = require("cors");
 const socketIo = require("socket.io");
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 const fetch = require('node-fetch');
-const sanitizer = require('sanitizer');
 const port = process.env.PORT || 4001;
 const filter = require("profanity-filter");
-const { MemoryStore } = require("express-session");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: './env/process.env' });
@@ -28,17 +23,8 @@ if (process.env.ENV === 'PROD') {
 filter.seed('profanity');
 const app = express();
 app.use(cors());
-app.use(cookieParser());
-app.use(session({
-  secret: "secret",
-  resave: true,
-  saveUninitialized: true,
-  cookie: { 
-    secure: false,
-  }
-}));
 
-const jsonParser = bodyParser.json();
+
 let server;
 if (process.env.ENV === 'PROD') {
   server = https.createServer(credentials, app);
