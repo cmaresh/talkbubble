@@ -37,6 +37,9 @@ const FormOpt = styled.div`
   justify-content: flex-end;
   align-items: center;
   margin-top: 10px;
+  @media(max-width: 768px) {
+    margin-bottom: 10px;
+  }
 `
 
 const Submit = styled.input`

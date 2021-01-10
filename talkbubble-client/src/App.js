@@ -30,8 +30,8 @@ const ImageCC = styled.div`
   padding-left: 15px;
   opacity: 0.5;
   @media(max-width: 768px) {
-    display: none;
-    margin-bottom: 120px; 
+    margin-top: 20px; 
+    margin-bottom: 20px;
     position: relative;
     z-index: -1;
     text-align: center;
