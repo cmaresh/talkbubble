@@ -1,5 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { Post } from './post';
 import styled from 'styled-components';
+import popfile from '../media/pop.wav';
 
 const FeedElem = styled.div`
   height: 100%;
@@ -9,28 +11,33 @@ const FeedElem = styled.div`
   scrollbar-width: none;  /* Firefox */
 `
 export function Feed(props) {
-    const final = [];
-    for (let i = 0; i < props.posts.length; i++) {
-      let member;
-     for (let j = 0; j < props.members.length; j++) {
-       if (props.posts[i].member === props.members[j].id) {
-         member = props.members[j];
-       }
-     }
-      let post = props.posts[i];
-      if (!props.muteList.includes(post.member)) {
-        final.push(<Post 
-          activeMember={props.activeMember} 
-          key={i} 
-          post={post}
-          member={member}
-          manageMember={props.manageMember}
-        />)
-      }
-    }
+  const [posts, setPosts] = useState([]);
+  const elemRef = React.createRef();
+  const pop = new Audio(popfile);
+  
+  useEffect(() => {
+    let lockScroll = false;
+    if (elemRef) lockScroll = Math.abs(elemRef.scrollHeight - elemRef.scrollTop - elemRef.clientHeight) < 100;
+    if (elemRef && lockScroll) elemRef.scrollTop = elemRef.scrollHeight;
+    pop.play();
+  }, [props.posts]);
+
+  let final;
+  let member;
+  let postList = props.posts.map(post => {
+    if (props.muteList.includes(post.member)) return;
+    member = props.members.find(memberTemp => memberTemp.id === post.member);
     return (
-      <FeedElem className="no-scroll" ref={props.setFeedRef}>
-        {final}
-      </FeedElem>
+      <Post 
+        activeMember={props.activeMember}
+        post={post}
+        member={member}
+      />
     );
+  });
+  return (
+    <FeedElem className="no-scroll" ref={elemRef}>
+      {postList}
+    </FeedElem>
+  );
 }

@@ -1,24 +1,12 @@
-import popfile from './media/pop.wav';
 import { Nav } from './components/nav';
 import { Feed } from './components/feed';
 import { Topic } from './components/topic';
 import { Management } from './components/management';
 import { Form } from './components/form';
-import React from 'react';
-import socketIOClient from "socket.io-client";
+import { SocketIO } from './classes/socketio';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import styled from 'styled-components';
-
-//const ENDPOINT = "https://www.talkbubble.org:4001";
-const ENDPOINT = "http://127.0.0.1:4001";
-
-const socket = socketIOClient(ENDPOINT, { secure: true });
-
-window.nickname = '';
-
-// shift and lastkey variables used for tracking shift+enter command in chat input
-window.shift = false;
-window.lastKey = '';
 
 const ImageCC = styled.div`
   position: fixed;
@@ -46,301 +34,97 @@ const MainRow = styled.div`
     margin: 5px;
   }
 `
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeMember: '', 
-      location: 'feed',
-      members: [],
-      msg: '',
-      muteList: [],
-      nickname: '',
-      nicknameTemp: '',
-      posts: [],
-      topic: '',
-      transitioningTopic: false,
-      updatingNickname: false,
-    }
+export function App(props) {
 
-    this.manageMember     = this.manageMember.bind(this);
-    this.toggleMute       = this.toggleMute.bind(this);
-    this.handleChange     = this.handleChange.bind(this);
-    this.chat             = this.chat.bind(this);
-    this.directMessage    = this.directMessage.bind(this);
-    this.changeNickname   = this.changeNickname.bind(this);
-    this.nicknameReject   = this.nicknameReject.bind(this);
-    this.nicknameAccept   = this.nicknameAccept.bind(this);
-    this.nicknameUpdate   = this.nicknameUpdate.bind(this);
-    this.setFeedRef       = this.setFeedRef.bind(this);
-    this.setLocation      = this.setLocation.bind(this);
+  const [user, setUser] = useState({});
+  const [posts, setPosts] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [activeMember, setActiveMember] = useState();
+  const [location, setLocation] = useState('feed');
+  const [muteList, setMuteList] = useState([]);
+  const [topic, setTopic] = useState();
+  const [transitioningTopic, setTransitioningTopic] = useState();
+  const [recipient, setRecipient] = useState('');
+  const [socketio, setSocketio] = useState();
+
+  const socketioProps = {
+    user, setUser, posts, setPosts, members, setMembers, setTopic, setTransitioningTopic
   }
 
-  setFeedRef(ref) {
-    this.feedRef = ref;
+  useEffect(() => {
+    setSocketio(new SocketIO(socketioProps));
+  }, []);
+
+  useEffect(() => {
+    if (socketio) socketio.updateProps(socketioProps);
+  }, [posts, members]);
+
+  function directMessage() {
+    setRecipient(activeMember);
   }
 
-  setLocation(loc) {
-    this.setState({ location: loc });
+  function manageMember(member) {
+    if (member === activeMember) setActiveMember('');
+    else setActiveMember(member);
   }
 
-  manageMember(member) {
-    if (member === this.state.activeMember) {
-      this.setState({
-        activeMember: '',
-      })
-    } else {
-      this.setState({
-        activeMember: member,
-      });
-    }
+  function toggleMute() {
+    console.log(muteList);
+    const muted = muteList.includes(activeMember);
+    if (muted) setMuteList([...muteList.filter(id => id !== activeMember)]);
+    else setMuteList([...muteList, activeMember]);
   }
 
-  toggleMute() {
-    let muted = false;
-    const muteListClone = [...this.state.muteList];
-    for (let i = 0; i < muteListClone.length; i) {
-      if (muteListClone[i] === this.state.activeMember) {
-        muteListClone.splice(i, 1);
-        muted = true;
-        break;
-      }
-    }
-
-    if (!muted) muteListClone.push(this.state.activeMember);
-
-    this.setState({muteList: muteListClone});
-  }
-  
-  handleChange(e) {
-    if (window.lastKey === 'Enter' && !window.shift) return;
-    if (e.target.value.length <= 256) {
-      this.setState({ msg: e.target.value });
-    } else {
-      this.setState({ msg: e.target.value.substring(0, 256) })
-    }
-  }
-
-  changeNickname(e) {
-    if (e.target.value.length <= 32) {
-      this.setState({ nicknameTemp: e.target.value })
-    } else {
-      this.setState({ nicknameTemp: e.target.value.substring(0, 32) })
-    }
-    
-  }
-
-  nicknameUpdate() {
-    this.setState({ 
-      nicknameTemp: this.state.nickname,
-      updatingNickname: true 
-    });
-  }
-
-  nicknameAccept() {
-    socket.emit('change nickname', { memberId: window.memberId, nickname: this.state.nicknameTemp})
-    this.setState({ 
-      nickname: this.state.nicknameTemp,
-      updatingNickname: false 
-    })
-  }
-
-  nicknameReject() {
-    this.setState({
-      updatingNickname: false
-    })
-  }
-  chat() {
-    if (this.state.msg.length < 1) return;
-    socket.emit('chat', {
-      msg: this.state.msg,
-      member: window.memberId,
-      nickname: window.nickname,
-    })
-    this.setState({ msg: '' });
-  }
-
-  directMessage() {
-    let msg = this.state.msg;
-    msg = this.state.activeMember + ' ' + msg;
-    this.setState({ msg, location: 'feed' })
-  }
-
-  componentDidMount() {
-    const _state = this.state;
-    const pop = new Audio(popfile);
-
-    socket.emit('join', (member, members) => {
-      window.memberId = member;
-      window.nickname = '';
-      members.forEach((member) => {
-        member.active = false;
-      })
-      this.setState({
-        members: members,
-      });
-    });
-
-  
-
-
-    
-    window.addEventListener('keydown', e => {
-      if (e.repeat) return;
-      if (e.key === "Shift") {
-        window.shift = true;
-      }
-      window.lastKey = e.key;
-      if (e.key === 'Enter' && !window.shift) {
-        if (this.state.updatingNickname) {
-          this.nicknameAccept();
-        } else {
-          this.chat();
-        }
-      }
-    });
-
-    window.addEventListener('keyup', e => {
-      if (e.key === "Shift") {
-        window.shift = false;
-      }
-    });
-    
-    const appendMember = (data) => {
-      data.active = false;
-      const membersClone = [...this.state.members];
-      membersClone.push(data);
-      this.setState({
-        members: membersClone,
-      })
-    }
-
-    const removeMember = (member) => {
-      const membersClone = [...this.state.members];
-      for (let i = 0; i < membersClone.length; i++) {
-        if (membersClone[i].id === member) {
-          membersClone.splice(i, 1);
-          break;
-        }
-      }
-      this.setState({
-        members: membersClone,
-      })
-    }
-
-    const appendChat = (data) => {
-      let lockScroll = false;
-      if (this.feedRef) lockScroll = Math.abs(this.feedRef.scrollHeight - this.feedRef.scrollTop - this.feedRef.clientHeight) < 100;
-      const postsClone = [...this.state.posts];
-      postsClone.push(data);
-      this.setState({
-        posts: postsClone,
-      });
-      if (this.feedRef && lockScroll) this.feedRef.scrollTop = this.feedRef.scrollHeight;
-      pop.play();
-    }
-
-    const switchTopic = (topic) => {
-      this.setState({ transitioningTopic: true });
-      setTimeout(() => {
-        this.setState({
-          topic,
-          transitioningTopic: false,
-        });
-      }, 1000);
-    }
-
-    const changeMemberNickname = (data) => {
-      console.log(data);
-      const membersClone = [...this.state.members];
-      membersClone.forEach((member) => {
-        if (member.id === data.memberId) {
-          member.nickname = data.nickname;
-        }
-      });
-      this.setState({ members: membersClone })
-    }
-
-    socket.on('chat', function(data){
-      appendChat(data);
-    });
-
-    socket.on('new member', function(data){
-      appendMember(data);
-    });
-
-    socket.on('member left', function(member) {
-      removeMember(member);
-    });
-
-    socket.on('change topic', function(topic) {
-      switchTopic(topic);
-    });
-
-    socket.on('change nickname', function(data) {
-      changeMemberNickname(data);
-    })
-  }
-
-  render() {
-    return (
-      <div>
-        <Nav location={this.state.location} setLocation={this.setLocation} />
-        <div className="container backdrop">
-          <MainRow className="row">
-            <div className="col-md-12">
-              <Topic 
-                  topic={this.state.topic}
-                  transitioningTopic={this.state.transitioningTopic}
-                />
+  return (
+    <div>
+      <Nav location={location} setLocation={setLocation} />
+      <div className="container backdrop">
+        <MainRow className="row">
+          <div className="col-md-12">
+            <Topic 
+                topic={topic}
+                transitioningTopic={transitioningTopic}
+              />
+          </div>
+          <div className={"col-md-7 order-md-2 feed-col " + (location === 'feed' ? 'active' : '')}>
+            <div className="column-content">
+              <Feed 
+                muteList={muteList}
+                members={members}
+                posts={posts}
+                activeMember={activeMember}
+                socketio={socketio}
+              />
+              <Form
+                recipient={recipient}
+                socketio={socketio}
+                user={user}
+              />
             </div>
-            <div className={"col-md-7 order-md-2 feed-col " + (this.state.location === 'feed' ? 'active' : '')}>
-              <div className="column-content">
-                <Feed 
-                  muteList={this.state.muteList}
-                  posts={this.state.posts}
-                  members={this.state.members}
-                  activeMember={this.state.activeMember}
-                  setFeedRef={this.setFeedRef}
-                  manageMember={this.manageMember}
-                />
-                <Form 
-                  msg={this.state.msg}
-                  handleChange={this.handleChange}
-                  onSubmit={this.chat}
-                  nickname={this.state.nickname}
-                  nicknameTemp={this.state.nicknameTemp}
-                  changeNickname={this.changeNickname}
-                  nicknameUpdate={this.nicknameUpdate}
-                  nicknameAccept={this.nicknameAccept}
-                  nicknameReject={this.nicknameReject}
-                  updatingNickname={this.state.updatingNickname}
-                />
-              </div>
+          </div>
+          <div className={"col-md-5 order-md-1 mgmt-col " + (location === 'mgmt' ? 'active' : '')}>
+            <div className="column-content">
+              <Management 
+                members={members}
+                manageMember={manageMember}
+                activeMember={activeMember}
+                toggleMute={toggleMute}
+                directMessage={directMessage}
+                muteList={muteList}
+              />
             </div>
-            <div className={"col-md-5 order-md-1 mgmt-col " + (this.state.location === 'mgmt' ? 'active' : '')}>
-              <div className="column-content">
-                <Management 
-                  members={this.state.members}
-                  manageMember={this.manageMember}
-                  activeMember={this.state.activeMember}
-                  toggleMute={this.toggleMute}
-                  directMessage={this.directMessage}
-                  muteList={this.state.muteList}
-                />
-              </div>
-            </div>
-            
-          </MainRow>
-        </div>
-        <ImageCC className="image-CC">
-          <a target="_blank" href="https://www.flickr.com/photos/35468147887@N01/14018311">“sea life”</a> by&nbsp;
-          <a target="_blank" href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
-          <a target="_blank" href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
-        </ImageCC>
+          </div>
+          
+        </MainRow>
       </div>
-      );
-  }
+      <ImageCC className="image-CC">
+        <a target="_blank" href="https://www.flickr.com/photos/35468147887@N01/14018311">“sea life”</a> by&nbsp;
+        <a target="_blank" href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
+        <a target="_blank" href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
+      </ImageCC>
+    </div>
+    );
+  
 }
 
 export default App;

@@ -33,10 +33,6 @@ const Message = styled.div`
   overflow-x: hidden;
 `
 
-function selectMember(props) {
-  props.manageMember(props.post.member);
-}
-
 function directText(props) {
   if (!props.post.recipient) return '';
   else if (props.post.recipient === window.memberId) return '@ You';
@@ -57,7 +53,7 @@ function getNickname(props) {
 
 export function Post(props) {
       return(
-        <PostElem onClick={() => selectMember(props)} className={"post " + 
+        <PostElem className={"post " + 
           (props.activeMember && props.post.member !== props.activeMember ? 'inactive ' : ' ') +
           (msgClass(props))
         }>

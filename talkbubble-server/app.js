@@ -111,10 +111,15 @@ io.on("connection", (socket) => {
     io.emit('new member', {
       id: memberId,
       nickname: '',
+      active: false,
     });
 
+    const user = {
+      memberId,
+      nickname: '',
+    }
     io.emit('change topic', topics[topicIndex]);
-    callback(memberId, membersTemp);
+    callback(user, membersTemp);
   });
 
   socket.on('chat', (data) => {
