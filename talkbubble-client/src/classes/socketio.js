@@ -31,7 +31,7 @@ export class SocketIO {
         this.socket.on('change nickname', (data) => {
             const membersCpy = [...this.props.members];
             membersCpy.forEach((member) => {
-                if (member.id === data.memberId) {
+                if (member.id === data.id) {
                     member.nickname = data.nickname;
                 }
             });
@@ -44,19 +44,22 @@ export class SocketIO {
     }
 
     //do NOT update state in this function
-    updateProps(props) { console.log(props); this.props = props; }
+    updateProps(props) { this.props = props; }
 
-    sendChat(msg) {
-        this.socket.emit('chat', {
+    sendChat(msg, recipient) {
+        const chat = {
             msg,
-            member: this.props.user.memberId,
-        });
+            member: this.props.user.id,
+        }
+        if (recipient.id) chat.recipient = recipient;
+
+        this.socket.emit('chat', chat);
     }
 
     changeNickname(nickname) {
         this.socket.emit('change nickname', { 
             nickname,
-            memberId: this.props.user.memberId, 
+            id: this.props.user.id, 
         });
     }
 }

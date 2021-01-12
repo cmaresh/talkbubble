@@ -39,12 +39,12 @@ export function App() {
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [members, setMembers] = useState([]);
-  const [activeMember, setActiveMember] = useState();
+  const [activeMember, setActiveMember] = useState({});
   const [location, setLocation] = useState('feed');
   const [muteList, setMuteList] = useState([]);
   const [topic, setTopic] = useState();
   const [transitioningTopic, setTransitioningTopic] = useState();
-  const [recipient, setRecipient] = useState('');
+  const [recipient, setRecipient] = useState({});
   const [socketio, setSocketio] = useState();
 
   const socketioProps = {
@@ -64,14 +64,14 @@ export function App() {
   }
 
   function manageMember(member) {
-    if (member === activeMember) setActiveMember('');
+    if (member.id === activeMember.id) setActiveMember('');
     else setActiveMember(member);
   }
 
   function toggleMute() {
-    const muted = muteList.includes(activeMember);
-    if (muted) setMuteList([...muteList.filter(id => id !== activeMember)]);
-    else setMuteList([...muteList, activeMember]);
+    const muted = muteList.includes(activeMember.id);
+    if (muted) setMuteList([...muteList.filter(id => id !== activeMember.id)]);
+    else setMuteList([...muteList, activeMember.id]);
   }
 
   return (
@@ -96,6 +96,7 @@ export function App() {
                 user={user}
               />
               <Form
+                setRecipient={setRecipient}
                 recipient={recipient}
                 socketio={socketio}
                 user={user}

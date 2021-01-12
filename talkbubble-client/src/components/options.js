@@ -37,11 +37,11 @@ export function Options(props) {
     return (
       <OptionsElem>
         <Option 
-          className={"option mute " + (props.activeMember ? 'active' : '')} 
+          className={"option mute " + (props.activeMember.id ? 'active' : '')} 
           onClick={props.toggleMute}
         ><MuteOutline_SVG /></Option>
         <Option 
-          className={"option dm " + (props.activeMember ? 'active' : '')} 
+          className={"option dm " + (props.activeMember.id ? 'active' : '')} 
           onClick={props.directMessage}
         ><Message_SVG /></Option>
       </OptionsElem>

@@ -50,7 +50,7 @@ export function Room(props) {
           props.members.map((member, index) =>
             <Member 
               key={index} 
-              member={member.id} 
+              member={member} 
               nickname={member.nickname}
               manageMember={props.manageMember}
               activeMember={props.activeMember}

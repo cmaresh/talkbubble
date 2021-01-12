@@ -35,32 +35,25 @@ const Message = styled.div`
 
 function directText(props) {
   if (!props.post.recipient) return '';
-  else if (props.post.recipient === props.user.memberId) return '@ You';
-  else return '@ ' + props.post.recipient;
+  else if (props.post.recipient === props.user.id) return '@ You';
+  else return '@ ' + props.post.recipient.nickname;
 }
 
 function msgClass(props) {
   if (!props.post.recipient) return '';
-  else if (props.post.recipient === props.user.memberId) return 'receiving';
+  else if (props.post.recipient.id === props.user.id) return 'receiving';
   else return 'sending';
-}
-
-function getNickname(props) {
-  if (!props.member) return '';
-  else if (props.member.nickname) return '(' + props.member.nickname + ')';
-  else return '';
 }
 
 export function Post(props) {
       return(
         <PostElem className={"post " + 
-          (props.activeMember && props.post.member !== props.activeMember ? 'inactive ' : ' ') +
+          (props.activeMember && props.post.member !== props.activeMember.id ? 'inactive ' : ' ') +
           (msgClass(props))
         }>
           <Message className="msg">
             <b>
-            {props.post.member}
-            {getNickname(props)}&nbsp;
+            {props.member.nickname}
             {directText(props)}<br></br>
             </b>
             {props.post.msg}

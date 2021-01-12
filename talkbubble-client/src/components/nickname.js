@@ -62,7 +62,7 @@ export function Nickname(props) {
     function getNicknameText() {
         if (updatingNickname) return nicknameTemp;
         else if (nickname) return nickname;
-        else return props.user.memberId;
+        else return props.user.nickname;
     }
 
     function nicknameUpdate() {

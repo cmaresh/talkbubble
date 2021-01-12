@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Nickname } from './nickname';
+import { SendingTo } from './sendingto';
 
 const MAX_POST_LENGTH = 256;
 
@@ -68,17 +69,14 @@ const CharCount = styled.div`
 
 export function Form(props) {
   const [msg, setMsg] = useState('');
-  const [lastKey, setLastKey] = useState('');
-  const [shift, setShift] = useState(false);
 
   function chat() {
     if (msg.length < 1) return;
-    props.socketio.sendChat(msg);
+    props.socketio.sendChat(msg, props.recipient);
     setMsg('');
   }
 
   function inputChange(e) {
-    if (lastKey === 'Enter' && !shift) return;
     if (e.target.value.length <= MAX_POST_LENGTH) {
       setMsg( e.target.value );
     } else {
@@ -86,32 +84,9 @@ export function Form(props) {
     }
   }
 
-  useEffect(() => {
-    setMsg(props.recipient + ' ' + msg);
-  }, [props.recipient]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', e => {
-      if (e.repeat) return;
-      if (e.key === "Shift") {
-        console.log('whats happening');
-        setShift(true);
-      }
-      setLastKey(e.key);
-      if (e.key === 'Enter' && !shift) {
-        chat();
-      }
-    });
-
-    window.addEventListener('keyup', e => {
-      if (e.key === "Shift") {
-        setShift(false);
-      }
-    });
-  }, []);
-
   return (
     <form id="postform" action="javascript:void(0)" onSubmit={chat}>
+      <SendingTo recipient={props.recipient} setRecipient={props.setRecipient} />
       <FormInput id="postform-textarea" form="postform" value={msg} onChange={inputChange} name="content" placeholder="Chat">{msg}</FormInput>
       <FormOpt className="below-textarea">
         <Nickname user={props.user} socketio={props.socketio} />

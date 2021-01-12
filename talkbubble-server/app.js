@@ -82,7 +82,7 @@ fetch(process.env.REDDIT_API)
       });
 
 
-function genId() {
+function getDefaultNickname() {
   let idTemp;
   let id;
   if (nextId < 100000) {
@@ -99,46 +99,37 @@ function genId() {
 
 io.on("connection", (socket) => {  
   socket.on('join', function(callback) {
-    const memberId = genId();
-    socket.memberId = memberId;
-    socket.nickname = '';
+    socket.nickname = getDefaultNickname();
     members.push(socket);
-    
-    membersTemp = [];
-    members.forEach((member) => {
-      membersTemp.push({
-        id: member.memberId,
-        nickname: member.nickname,
-      })
-    });
 
     io.emit('new member', {
-      id: memberId,
-      nickname: '',
+      id: socket.id,
+      nickname: socket.nickname,
       active: false,
     });
 
+    io.to(socket.id).emit('change topic', topics[topicIndex]);
+
     const user = {
-      memberId,
-      nickname: '',
+      id: socket.id,
+      nickname: socket.nickname,
     }
-    io.emit('change topic', topics[topicIndex]);
-    callback(user, membersTemp);
+    callback(user, members.map(member => {
+      return { 
+        id: member.id, 
+        nickname: member.nickname 
+      }
+    }));
   });
 
   socket.on('chat', (data) => {
     if (data.msg.length > MAX_POST_LENGTH) return;
-    if (data.msg[0] === '#') {
-      const recipientId = data.msg.match(/#[0-9]*(?=\s)/m)[0];
-      data.msg = data.msg.replace(recipientId, '').trim();
+    if (data.recipient) {
       data.msg = filter.clean(data.msg);
-      const recipient = members.find(member => member.memberId === recipientId);
-      if (recipient) {
-        data.direct = true;
-        data.recipient = recipientId;
-        io.to(recipient.id).emit('chat', data);
-        io.to(socket.id).emit('chat', data);
-      }
+      data.direct = true;
+      data.recipient = data.recipient.id;
+      io.to(data.recipient.id).emit('chat', data);
+      if (data.recipient.id !== socket.id) io.to(socket.id).emit('chat', data);
     } else {
       data.msg = filter.clean(data.msg);
       io.emit('chat', data);
@@ -149,7 +140,7 @@ io.on("connection", (socket) => {
     if (data.nickname.length > MAX_NICKNAME_LENGTH) return;
     socket.nickname = data.nickname;
     io.emit('change nickname', {
-      memberId: socket.memberId,
+      id: socket.id,
       nickname: data.nickname,
     });
   });
@@ -164,7 +155,7 @@ io.on("connection", (socket) => {
       }
     }
     if (memberTemp) {
-      io.emit('member left', memberTemp.memberId);
+      io.emit('member left', memberTemp.id);
     }
   });
 });

@@ -34,9 +34,9 @@ export function Member(props) {
       return (
       <MemberElem 
         onClick={() => props.manageMember(props.member)}
-        className={(props.activeMember === props.member ? 'active' : '')}
+        className={(props.activeMember.id === props.member.id ? 'active' : '')}
       >
-        {props.member} {props.nickname ? '(' + props.nickname + ')' : ''}
+        {props.nickname}
         <MuteIcon className={(props.muted ? 'muted' : '')}><Mute_SVG /></MuteIcon>
       </MemberElem>)
       ;

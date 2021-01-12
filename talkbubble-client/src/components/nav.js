@@ -5,9 +5,13 @@ import {ReactComponent as People_SVG} from '../media/people.svg';
 import {ReactComponent as Logo_SVG} from '../media/logo.svg';
 
 const NavElem = styled.div`
+  display: none;
   padding-top: 5px;
   background-color: var(--talkbubble-blue);
   border-bottom: 1px solid var(--talkbubble-yellow);
+  @media(max-width: 768px) {
+    display: block;
+  }
 `
 const Pages = styled.div`
   display: none;
