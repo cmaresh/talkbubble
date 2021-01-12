@@ -35,13 +35,13 @@ const Message = styled.div`
 
 function directText(props) {
   if (!props.post.recipient) return '';
-  else if (props.post.recipient === window.memberId) return '@ You';
+  else if (props.post.recipient === props.user.memberId) return '@ You';
   else return '@ ' + props.post.recipient;
 }
 
 function msgClass(props) {
   if (!props.post.recipient) return '';
-  else if (props.post.recipient === window.memberId) return 'receiving';
+  else if (props.post.recipient === props.user.memberId) return 'receiving';
   else return 'sending';
 }
 

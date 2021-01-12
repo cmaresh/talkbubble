@@ -32,6 +32,7 @@ export function Feed(props) {
         activeMember={props.activeMember}
         post={post}
         member={member}
+        user={props.user}
       />
     );
   });

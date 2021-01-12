@@ -94,6 +94,7 @@ export function App(props) {
                 posts={posts}
                 activeMember={activeMember}
                 socketio={socketio}
+                user={user}
               />
               <Form
                 recipient={recipient}
