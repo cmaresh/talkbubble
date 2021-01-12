@@ -30,22 +30,13 @@ const MuteIcon = styled.span`
   }
 `
 
-function selectMember(props) {
-  props.manageMember(props.member);
-}
-
-function getNickname(props) {
-  if (props.nickname) return '(' + props.nickname + ')';
-  else return '';
-}
-
 export function Member(props) {
       return (
       <MemberElem 
-        onClick={() => selectMember(props)}
+        onClick={() => props.manageMember(props.member)}
         className={(props.activeMember === props.member ? 'active' : '')}
       >
-        {props.member} {getNickname(props)}
+        {props.member} {props.nickname ? '(' + props.nickname + ')' : ''}
         <MuteIcon className={(props.muted ? 'muted' : '')}><Mute_SVG /></MuteIcon>
       </MemberElem>)
       ;

@@ -24,14 +24,6 @@ const Page = styled.div`
   }
 `
 
-function changeLocation(props) {
-  if (props.location === 'feed') {
-    props.setLocation('mgmt');
-  } else {
-    props.setLocation('feed');
-  }
-}
-
 export function Nav(props) {
     return (
     <NavElem>
@@ -39,7 +31,7 @@ export function Nav(props) {
         <div className="row">
           <div className="col-sm-12 d-flex justify-content-between">
           <Logo_SVG />
-          <Pages onClick={() => changeLocation(props)}>
+          <Pages onClick={() => props.location === 'feed' ? props.setLocation('mgmt') : props.setLocation('feed')}>
             <Page className={props.location === 'feed' ? 'active' : ''}><ChatDots_SVG /></Page>
             <Page className={props.location === 'mgmt' ? 'active' : ''}><People_SVG /></Page>
           </Pages>
