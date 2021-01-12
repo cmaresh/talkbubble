@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {ReactComponent as Confirm_SVG} from '../media/confirm.svg';
 import {ReactComponent as Cancel_SVG} from '../media/cancel.svg';
 
+const MAX_NICKNAME_LENGTH = 32;
 const NicknameElem = styled.div`
     display: flex;
     justify-content: flex-start;
@@ -70,10 +71,10 @@ export function Nickname(props) {
     }
 
     function nicknameChange(e) {
-        if (e.target.value.length <= 32) {
+        if (e.target.value.length <= MAX_NICKNAME_LENGTH) {
             setNicknameTemp(e.target.value);
         } else {
-            setNicknameTemp(e.target.value.substring(0, 32));
+            setNicknameTemp(e.target.value.substring(0, MAX_NICKNAME_LENGTH));
         }
     }
 

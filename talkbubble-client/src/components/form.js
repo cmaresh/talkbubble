@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Nickname } from './nickname';
 
+const MAX_POST_LENGTH = 256;
+
 const FormInput = styled.textarea`
   display: block;
   width: 100%;
@@ -77,10 +79,10 @@ export function Form(props) {
 
   function inputChange(e) {
     if (lastKey === 'Enter' && !shift) return;
-    if (e.target.value.length <= 256) {
+    if (e.target.value.length <= MAX_POST_LENGTH) {
       setMsg( e.target.value );
     } else {
-      setMsg( e.target.value.substring(0, 256) );
+      setMsg( e.target.value.substring(0, MAX_POST_LENGTH) );
     }
   }
 
@@ -113,7 +115,7 @@ export function Form(props) {
       <FormInput id="postform-textarea" form="postform" value={msg} onChange={inputChange} name="content" placeholder="Chat">{msg}</FormInput>
       <FormOpt className="below-textarea">
         <Nickname user={props.user} socketio={props.socketio} />
-        <CharCount>{msg.length}/256</CharCount>
+        <CharCount>{msg.length}/{MAX_POST_LENGTH}</CharCount>
         <Submit type="submit" value="Post"></Submit>
       </FormOpt>
     </form>

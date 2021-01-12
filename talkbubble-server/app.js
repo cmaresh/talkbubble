@@ -9,6 +9,10 @@ const port = process.env.PORT || 4001;
 const filter = require("profanity-filter");
 const dotenv = require("dotenv");
 
+const MAX_POST_LENGTH = 256;
+const MAX_NICKNAME_LENGTH = 32;
+const TOPIC_INTERVAL = 200000;
+
 dotenv.config({ path: './env/process.env' });
 
 let privateKey;
@@ -74,7 +78,7 @@ fetch(process.env.REDDIT_API)
 
         io.emit('change topic', topics[0]);
         topicIndex = 1;
-        setInterval(changeTopic, 200000);
+        setInterval(changeTopic, TOPIC_INTERVAL);
       });
 
 
@@ -123,7 +127,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('chat', (data) => {
-    if (data.msg.length > 256) return;
+    if (data.msg.length > MAX_POST_LENGTH) return;
     if (data.msg[0] === '#') {
       const recipientId = data.msg.match(/#[0-9]*(?=\s)/m)[0];
       data.msg = data.msg.replace(recipientId, '').trim();
@@ -148,7 +152,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('change nickname', (data) => {
-    if (data.nickname.length > 32) return;
+    if (data.nickname.length > MAX_NICKNAME_LENGTH) return;
     socket.nickname = data.nickname;
     io.emit('change nickname', {
       memberId: socket.memberId,
