@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 
 const TopicElem = styled.div`
@@ -67,7 +68,7 @@ export function Topic(props) {
       <TopicElem>
         <TopicHeader>
           <span>Random Topic:</span>
-          <span>Taken from <a target="_blank" href="https://www.reddit.com/r/Showerthoughts/">r/showerthoughts</a></span>
+          <span>Taken from <a target="_blank" rel="noreferrer" href="https://www.reddit.com/r/Showerthoughts/">r/showerthoughts</a></span>
         </TopicHeader>
         <TopicContent className="no-scroll">
           <TopicText className={(props.transitioningTopic ? 'transitioning' : '')}> {props.topic}</TopicText>

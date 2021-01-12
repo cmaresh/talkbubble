@@ -1,3 +1,4 @@
+import React from 'react';
 import { Room } from './room';
 import { Options } from './options';
 

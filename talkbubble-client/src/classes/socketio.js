@@ -1,8 +1,6 @@
 import socketIOClient from "socket.io-client";
 
 export class SocketIO {
-    props;
-    socket;
     constructor(props) {
         this.props = props;
         //ENDPOINT = "https://www.talkbubble.org:4001";

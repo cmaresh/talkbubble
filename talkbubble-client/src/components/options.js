@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import {ReactComponent as MuteOutline_SVG} from '../media/mute-outline.svg';
 import {ReactComponent as Message_SVG} from '../media/message.svg';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import {ReactComponent as Confirm_SVG} from '../media/confirm.svg';
 import {ReactComponent as Cancel_SVG} from '../media/cancel.svg';

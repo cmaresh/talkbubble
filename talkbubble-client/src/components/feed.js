@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Post } from './post';
 import styled from 'styled-components';
 import popfile from '../media/pop.wav';
@@ -13,7 +13,6 @@ const FeedElem = styled.div`
   scrollbar-width: none;  /* Firefox */
 `
 export function Feed(props) {
-  const [posts, setPosts] = useState([]);
   const elemRef = React.createRef();
   const pop = new Audio(popfile);
   
@@ -24,13 +23,13 @@ export function Feed(props) {
     pop.play();
   }, [props.posts]);
 
-  let final;
   let member;
-  let postList = props.posts.map(post => {
+  let postList = props.posts.map((post, index) => {
     if (props.muteList.includes(post.member)) return;
     member = props.members.find(memberTemp => memberTemp.id === post.member);
     return (
       <Post 
+        key={index}
         activeMember={props.activeMember}
         post={post}
         member={member}

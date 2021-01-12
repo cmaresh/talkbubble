@@ -1,3 +1,4 @@
+import React from 'react';
 import { Member } from './member';
 import styled from 'styled-components';
 

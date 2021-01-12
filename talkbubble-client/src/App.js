@@ -34,7 +34,7 @@ const MainRow = styled.div`
     margin: 5px;
   }
 `
-export function App(props) {
+export function App() {
 
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
@@ -69,7 +69,6 @@ export function App(props) {
   }
 
   function toggleMute() {
-    console.log(muteList);
     const muted = muteList.includes(activeMember);
     if (muted) setMuteList([...muteList.filter(id => id !== activeMember)]);
     else setMuteList([...muteList, activeMember]);
@@ -119,9 +118,9 @@ export function App(props) {
         </MainRow>
       </div>
       <ImageCC className="image-CC">
-        <a target="_blank" href="https://www.flickr.com/photos/35468147887@N01/14018311">“sea life”</a> by&nbsp;
-        <a target="_blank" href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
-        <a target="_blank" href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
+        <a target="_blank" rel="noreferrer" href="https://www.flickr.com/photos/35468147887@N01/14018311">“sea life”</a> by&nbsp;
+        <a target="_blank" rel="noreferrer" href="https://www.flickr.com/photos/hodgers/">Tom Hodgkinson</a> is licensed under&nbsp;
+        <a target="_blank" rel="noreferrer" href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0.</a> 
       </ImageCC>
     </div>
     );
