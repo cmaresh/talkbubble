@@ -36,7 +36,7 @@ const Message = styled.div`
 function directText(props) {
   if (!props.post.recipient) return '';
   else if (props.post.recipient === props.user.id) return '@ You';
-  else return '@ ' + props.post.recipient.nickname;
+  else return ' @ ' + props.post.recipient.nickname;
 }
 
 function msgClass(props) {
@@ -48,7 +48,7 @@ function msgClass(props) {
 export function Post(props) {
       return(
         <PostElem className={"post " + 
-          (props.activeMember && props.post.member !== props.activeMember.id ? 'inactive ' : ' ') +
+          (props.activeMember.id && props.post.member !== props.activeMember.id ? 'inactive ' : ' ') +
           (msgClass(props))
         }>
           <Message className="msg">

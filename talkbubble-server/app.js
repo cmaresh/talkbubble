@@ -127,7 +127,6 @@ io.on("connection", (socket) => {
     if (data.recipient) {
       data.msg = filter.clean(data.msg);
       data.direct = true;
-      data.recipient = data.recipient.id;
       io.to(data.recipient.id).emit('chat', data);
       if (data.recipient.id !== socket.id) io.to(socket.id).emit('chat', data);
     } else {
