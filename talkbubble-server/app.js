@@ -56,7 +56,7 @@ const io = socketIo(server, {
 });
 
 let interval;
-const members = [];
+let members = [];
 let nextId = 1;
 
 let topics = [];
@@ -132,13 +132,7 @@ io.on("connection", (socket) => {
       const recipientId = data.msg.match(/#[0-9]*(?=\s)/m)[0];
       data.msg = data.msg.replace(recipientId, '').trim();
       data.msg = filter.clean(data.msg);
-      let recipient;
-      for (let i = 0; i < members.length; i++) {
-        if (members[i].memberId === recipientId) {
-          recipient = members[i];
-          break;
-        }
-      }
+      const recipient = members.find(member => member.memberId === recipientId);
       if (recipient) {
         data.direct = true;
         data.recipient = recipientId;
