@@ -18,4 +18,3 @@ npm start
 ```
 
 4. Navigate to http://localhost:3000 to view the application.
-5. 
