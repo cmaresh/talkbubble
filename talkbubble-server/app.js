@@ -11,13 +11,14 @@ const dotenv = require("dotenv");
 
 const MAX_POST_LENGTH = 256;
 const MAX_NICKNAME_LENGTH = 32;
-const TOPIC_INTERVAL = 200000;
+const TOPIC_INTERVAL = 40000;
 
 dotenv.config({ path: './env/process.env' });
 
 let privateKey;
 let certificate;
 let credentials;
+
 if (process.env.ENV === 'PROD') {
   privateKey  = fs.readFileSync(process.env.KEY_PATH, 'utf8');
   certificate = fs.readFileSync(process.env.CERT_PATH, 'utf8');
@@ -67,13 +68,16 @@ const changeTopic = function() {
   io.emit('change topic', topics[topicIndex]);
 }
 
-fetch(process.env.REDDIT_API)
+fetch('https://www.reddit.com/r/askreddit/hot.json')
       .then( (response) => response.json() )
       .then( (data) => { 
         const posts = data.data.children;
 
         posts.forEach((post) => {
-          if (!post.data.stickied) topics.push(post.data.title);
+          if (
+            !post.data.stickied &&
+            !post.data.over_18
+            ) topics.push(post.data.title);
         });
 
         io.emit('change topic', topics[0]);
